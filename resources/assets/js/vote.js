@@ -232,6 +232,9 @@ $(document).ready(function(){
     }
 });
 
+/**
+ * Add New Option
+ */
 var addNewOption = function () {
     this.init = function() {
         this.cacheDom();

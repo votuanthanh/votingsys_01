@@ -1097,3 +1097,110 @@ if (document.getElementById('location') != null) {
         });
     });
 }
+
+$( document ).ready(function() {
+    $('input[name=name]').val('123');
+    $('input[name=email]').val('123@gmail.com');
+    $('input[name=title]').val('123');
+    $('.btn-change-step').trigger('click');
+});
+
+function jqAddImageOption(config) {
+    this.initDom(config);
+    this.bindEvents();
+}
+
+jqAddImageOption.prototype.bindEvents = function () {
+    $(this.wrapperPoll).on('click', this.btnChooseImage, this.showIframe.bind(this));
+    $(this.frUploadFile).on('click', this.showBoxUpload.bind(this));
+    $(this.wrapperPoll).on('change', this.elInputFile, this.preImage.bind(this));
+    $(this.frAddImgLink).on('click', this.addImageByLink.bind(this));
+}
+
+jqAddImageOption.prototype.extendOptions = function (config) {
+    var defaults = {
+        wrapperPoll: '.poll-option',
+        btnChooseImage: '.upload-photo',
+        parentOption: '.form-group',
+
+        srcThumbImageOption: '',
+        imgWinOption: '',
+
+        elInputFile: '',
+        elBtnChooseImage: '',
+        elParentOption: '',
+
+        /**
+         * DOM of frame option image
+         */
+        frImage: "#frame-upload-image",
+        frUploadFile: '.photo-tb-upload',
+        frPreImage: '.img-pre-option',
+        frAddImgLink: '.add-image-by-link',
+        frInputText: '.photo-tb-url-txt'
+    }
+    var options = $.extend(defaults, config);
+
+    return options;
+}
+
+jqAddImageOption.prototype.initDom = function (config) {
+    var options = this.extendOptions(config);
+
+    this.wrapperPoll = options.wrapperPoll;
+    this.btnChooseImage = options.btnChooseImage;
+    this.parentOption = options.parentOption;
+
+    this.elInputFile = options.elInputFile;
+    this.elBtnChooseImage = options.elBtnChooseImage;
+    this.elParentOption = options.elParentOption;
+
+    this.frUploadFile = options.frUploadFile;
+    this.frImage = options.frImage;
+    this.frPreImage = options.frPreImage;
+    this.frAddImgLink = options.frAddImgLink;
+    this.frInputText = options.frInputText;
+
+}
+
+jqAddImageOption.prototype.showIframe = function (e) {
+    var $this = e.currentTarget;
+
+    this.elParentOption = $($this).closest(this.parentOption);
+
+    this.srcThumbImageOption = this.elParentOption.find('img').prop('src');
+    this.elInputFile = this.elParentOption.find('input[type=file]');
+
+
+    $(this.frImage).modal('show');
+}
+
+jqAddImageOption.prototype.showBoxUpload = function (e) {
+    this.elInputFile.click();
+}
+
+jqAddImageOption.prototype.preImage = function () {
+    var $this = this;
+    var input = $this.elInputFile[0];
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $($this.frPreImage).attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+jqAddImageOption.prototype.addImageByLink = function () {
+    var urlImage = $(this.frInputText).val().trim();
+
+    if (urlImage != '') {
+        var idOption = this.elParentOption.attr('id');
+        var inputUrlText = $('<input>').attr({type: 'hidden', name: 'optionImage[' + idOption + ']'});
+
+        $(this.elParentOption).prepend(inputUrlText);
+    }
+}
+
+var jqAddImageOption = new jqAddImageOption();

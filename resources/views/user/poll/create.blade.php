@@ -13,7 +13,50 @@
     {{ trans('polls.title') }}
 @endsection
 @section('content')
-
+<div class="modal fade" tabindex="-1" role="dialog" id="frame-upload-image">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="sub-tab">
+                    <div class="sel">Add Picture For Option</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="win-img">
+                    <div class="photo-tb">
+                        <div class="row">
+                            <div class="col col-md-9 photo-tb-url">
+                                <div class="add-link-image-group">
+                                    <input type="text" name="" class="photo-tb-url-txt form-control">
+                                    <span class="add-image-by-link label-info">
+                                        Add
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col col-md-3 photo-tb-ui">
+                                <div class="photo-tb-btn photo-tb-upload">
+                                    <span class="fa fa-camera"></span>
+                                    <p>Upload</p>
+                                </div>
+                                <div class="photo-tb-btn photo-tb-del">
+                                    <span class="fa fa-times"></span>
+                                    <p>Delete</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="photo-preivew">
+                        <img src="" class="img-pre-option">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-yes">Okay</button>
+                <button type="button" class="btn btn-no" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+  </div>
+</div>
     <!-- Create poll -->
     <div class="row row-create-poll">
         <div class="loader"></div>
