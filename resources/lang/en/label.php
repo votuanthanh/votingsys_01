@@ -21,7 +21,6 @@ return [
     'home' => 'Home',
     'admin_page' => 'ADMIN PAGE',
     'errors' => 'Message',
-    'send_feedback' => 'Send Feedback',
 
     /**
      * MASTER ADMIN
@@ -42,12 +41,12 @@ return [
         'link_vote' => 'Link to vote:',
         'link_admin' => 'Link manager vote:',
         'subject' => 'Fpoll',
-        'delete_all_participant' => 'Admin of poll deleted all participant',
-        'register_active_mail' => 'You register successfully. Please click on link to active account. Link here: ',
+        'delete_all_participant' => 'Admin of poll deleted all votes',
+        'register_active_mail' => 'You registered sucessfully. Please click on the link to active account. Link here: ',
         'edit_poll' => [
             'subject' => 'Fpoll - Edit information of poll',
             'head' => 'Fpoll',
-            'summary' => 'Poll of you changed!',
+            'summary' => 'Your poll was changed!',
             'thead' => [
                 'STT' => 'NO.',
                 'info' => 'INFORMATION',
@@ -61,29 +60,29 @@ return [
             'title' => 'Poll',
             'head' => 'Fpoll',
             'dear' => 'Dear',
-            'thank' => 'Thank you because you have used website our. <br> Your poll created SUCCESS. Below, it\'s two link which they send your mail.',
+            'thank' => 'Thanks for your using our website . <br> Your poll created SUCCESSFULLY. Below is two links which sent your mail.',
             'link_vote' => 'Link to vote for this poll',
-            'description_link_vote' => 'Send this link to every body that you want invite for participant.',
-            'link_admin' => 'Link to administrator for this poll',
-            'description_link_admin' => 'Access this link help you can change, close or delete poll of you.',
+            'description_link_vote' => 'Send this link to your friends that you want to invite for participant.',
+            'link_admin' => 'Link to administrate for this poll',
+            'description_link_admin' => 'Access this link to change, close or delete your poll.',
             'password' => 'Password',
-            'note' => '*<u>Note</u>: You can login our website without must not register a new account. Let\'s click "Active account" to open account of you',
+            'note' => '*<u>Note</u>: You can login our website without registering a new account. Let's click "Active account" to open your account',
             'active_account' => 'Active account',
             'end' => '-- END --',
         ],
         'backup_database' => [
             'subject' => 'Fpoll - Backup database',
-            'head' => 'Hello Admin, This email to send backup database file',
+            'head' => 'Hello Admin, The backup database file was sent at attachment',
         ],
         'participant_vote' => [
             'subject' => 'Fpoll - invite you vote a poll',
-            'invite' => 'You have been invited to participant this poll. Let\'s clink link below to vote',
+            'invite' => 'You have been invited to participant this poll. Let's clink the below link to vote',
         ],
         'edit_option' => [
             'subject' => 'Fpoll - Edit option of poll',
             'old_option' => 'OLD OPTION',
             'new_option' => 'NEW OPTION',
-            'thank' => 'Thank you because you have used website our',
+            'thank' => 'Thanks for your using our website',
             'title' => 'Change option',
         ],
         'edit_setting' => [
@@ -94,17 +93,17 @@ return [
         ],
         'register' => [
             'subject' => 'Fpoll - Register account',
-            'thank' => 'Thank you because you have used website our. <br> Your register account SUCCESS. Below, it\'s link to active account',
+            'thank' => 'Thanks for your using our website. <br> Your registered account was SUCCESSFUL. Below is the link to active account',
             'link_active' => 'Click to this link to active account',
         ],
         'edit_link' => [
             'subject' => 'Fpoll - Edit link of poll',
-            'thank' => 'Thank you because you have used website our. <br> You edit link SUCCESS.',
-            'link_edit' => 'Click to blow link to view detail',
+            'thank' => 'Thanks for your using our website. <br> You edited the link SUCCESSFULLY.',
+            'link_edit' => 'Click to blow link for more detail',
         ],
         'close_poll' => [
             'subject' => 'Fpoll - Close poll',
-            'thank' => 'Thank you because you have used our website. <br> You close poll SUCCESS.',
+            'thank' => 'Thanks for your using our website. <br> You closed the poll SUCCESSFULLY.',
             'link_admin' => 'Click to blow link to manage poll',
         ],
         'open_poll' => [
@@ -114,12 +113,8 @@ return [
         ],
         'delete_participant' => [
             'subject' => 'Fpoll - Delete all participant of poll',
-            'thank' => 'Thank you because you have used our website. <br> You delete all vote of poll SUCCESS.',
+            'thank' => 'Thanks for your using our website. <br> You deleted all votes of poll SUCCESSFULLY.',
             'link_admin' => 'Click to blow link to manage poll',
-        ],
-        'feedback' => [
-            'header_content' => 'Here is feedback form customer about which Fpoll website:',
-            'subject' => '[Fpoll] Feedback from customer',
         ],
     ],
     'footer' => [
@@ -127,7 +122,7 @@ return [
         'copyright' => 'Copyright 2016 Framgia, Inc. <br>All rights reserved.',
         'email' => 'hr_team@framgia.com',
         'phone' => ' 84-4-3795-5417',
-        'about' => 'Fpoll - a simple, convinient and powerfull Poll System',
+        'about' => 'Fpoll - a simple, convenient and powerful Poll System',
         'description_website' => 'Fpoll help to create a poll quickly and easily',
         'facebook' => 'https://www.facebook.com/FramgiaVietnam',
         'github' => 'https://github.com/framgia',
@@ -146,12 +141,12 @@ return [
      */
     'feature' => [
         'name' => 'FEATURES',
-        'vote' => 'Create a poll fast and easy',
+        'vote' => 'Create a poll fast and easily',
         'chart' => 'Result illustrated by bar chart and pie chart ',
-        'security' => 'Guaranteed security by password of poll',
-        'export' => 'Can export result to PDF file or EXCEL file',
+        'security' => 'Guarantee security by password of poll',
+        'export' => 'Export result to PDF file or EXCEL file',
         'share' => 'Share poll by facebook',
-        'responsive' => 'Support multiple deceive: laptop or mobie',
+        'responsive' => 'Support multiple deceives: laptop or mobie',
     ],
     'tutorial' => 'Tutorial',
     'feedback' => 'Feedback',
