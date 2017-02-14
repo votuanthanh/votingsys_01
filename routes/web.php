@@ -176,3 +176,12 @@ Route::get('feedback', 'FeedbackController@showFeedback');
 Route::post('feedback', 'FeedbackController@sendFeedback');
 
 Route::post('ajaxCheckIfExistEmailVoter', 'User\VoteController@ajaxCheckIfExistEmailVote');
+
+Route::get('search-poll', 'SearchController@index');
+use App\Models\Poll;
+use App\Models\User;
+
+Route::get('test', function () {
+    //dd(User::where('email', '123@gmail.com')->first()->polls()->get());
+    dd(Poll::search('123@gmail.com')->with('links')->get());
+});

@@ -796,3 +796,75 @@ $frame-padding: 5px;
 .cz-panel {
     border-radius: 0;
 }
+
+/* SEARCH */
+.listing-sppoll {
+    .poll-row {
+        background-color: #fff;
+        margin-top: 10px;
+        a {
+            display: flex;
+            color: #000;
+            background-color: #fff;
+            border-left: 4px solid #fff;
+            transition: all .3s;
+            &:hover {
+                background-color: #fff;
+                border-left: 4px solid darkcyan;
+            }
+            .search-avatar {
+                position: relative;
+                flex: none;
+                margin-right: 10px;
+                img {
+                    width: 75px;
+                }
+            }
+            .poll-info {
+                display: block;
+                flex: 1 100%;
+                .poll-title {
+                    font-size: 16px;
+                    line-height: 21px;
+                    display: block;
+                    background: darkcyan;
+                    padding: 10px 10px 10px 34px;
+                    position: relative;
+                    word-break: break-word;
+                    text-align: left;
+                    border-radius: 5px;
+                    color: #fff;
+                    margin-bottom: 3px;
+                    &:before {
+                        content: '';
+                        position: absolute;
+                        pointer-events: none;
+                        width: 10px;
+                        height: 10px;
+                        background: darkcyan;
+                        border-width: 1px 1px 0 0;
+                        transform: rotate(-135deg);
+                        left: -5px;
+                        top: 15px;
+                    }
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        pointer-events: none;
+                        width: 8px;
+                        border: 1px solid #fff;
+                        border-width: 0 1px;
+                        top: 0;
+                        bottom: 0;
+                        left: 14px;
+                    }
+
+                }
+                .poll-detail {
+                    display: block;
+                    color: #666;
+                }
+            }
+        }
+    }
+}

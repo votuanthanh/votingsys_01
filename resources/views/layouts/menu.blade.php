@@ -31,6 +31,7 @@
                     </li>
                 @endif
             </ul>
+
             <ul class="nav-menu nav navbar-nav navbar-right">
                 @if (Auth::guest())
                     <li {!! Request::is('login') ? 'class="active"' : '' !!}>
@@ -88,6 +89,18 @@
                     </div>
                 </li>
             </ul>
+
+            <form class="navbar-form navbar-right">
+                <div class="input-group">
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Search">
+                    </div>
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
 </nav>

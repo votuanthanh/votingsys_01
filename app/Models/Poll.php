@@ -10,9 +10,12 @@ use App\Models\Setting;
 use App\Models\Link;
 use App\Models\Activity;
 use App\Models\Comment;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Poll extends Model
 {
+    use SearchableTrait;
+
     protected $fillable = [
         'user_id',
         'title',
@@ -24,6 +27,32 @@ class Poll extends Model
         'name',
         'email',
     ];
+
+    /**
+     * Searchable rules.
+     *
+     * @var array
+     */
+    protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            'polls.title' => 10,
+            'users.name' => 10,
+            'links.token' => 8,
+            'users.email' => 5,
+        ],
+        'joins' => [
+            'links' => ['polls.id', 'links.poll_id'],
+            'users' => ['polls.user_id', 'users.id'],
+        ],
+    ];
+
 
     public function user()
     {
