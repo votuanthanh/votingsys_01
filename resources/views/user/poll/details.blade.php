@@ -17,6 +17,24 @@
     <meta property="og:title" content="{{ $poll->title }}" />
     <meta property="og:description" content="{{ $poll->description }}" />
     <meta property="og:image" content="{{ asset('/uploads/images/vote.png') }}" />
+    <style type="text/css">
+         #chartjs-tooltip {
+             opacity: 0;
+             position: absolute;
+             background: rgba(0, 0, 0, .7);
+             color: white;
+             padding: 3px;
+             border-radius: 3px;
+             -webkit-transition: all .1s ease;
+             transition: all .1s ease;
+             pointer-events: none;
+             -webkit-transform: translate(-50%, 0);
+             transform: translate(-50%, 0);
+         }
+         #chartjs-tooltip > img {
+             height: 100px;
+         }
+    </style>
 @endsection
 @section('content')
 
@@ -969,7 +987,7 @@
                                                 <div class="show-barchart tab-pane fade" id="barChart" role="dialog">
                                                     <div class="col-lg-12">
                                                         <!-- bar chart -->
-                                                        <div id="chart"></div>
+                                                        <canvas id="chart" width="900" height="550"></canvas>
                                                     </div>
                                                 </div>
                                             @endif
@@ -987,7 +1005,7 @@
             </div>
         </div>
     </div>
-
+    <div id="chartjs-tooltip"></div>
     <!-- Modal detail chart-->
     <div id="myModalChart" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -1038,8 +1056,8 @@
 
 
     <!-- HIGHCHART-->
-    {!! Html::script('bower/highcharts/highcharts.js') !!}
-    {!! Html::script('bower/highcharts/highcharts-3d.js') !!}
+    {!! Html::script('bower/chart.js/dist/Chart.bundle.min.js') !!}
+    {!! Html::script('bower/chart.js/dist/Chart.min.js') !!}
 
     <!-- CHART -->
     {!! Html::script('js/chart.js') !!}
