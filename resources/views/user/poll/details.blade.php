@@ -269,7 +269,7 @@
                                 <div class="panel-body panel-body-vote-option">
                                     <div class="col-lg-12">
                                         <h4>{{ $poll->title }}</h4>
-                                        <p class="description-poll">{!! cleanText($poll->description) !!}</p>
+                                        <p class="description-poll">{!! $poll->description !!}</p>
                                         <label class="poll-count">
                                             <span class="label label-primary glyphicon glyphicon-user poll-details">
                                                 <span class="count-participant">{{ $countParticipantsVoted }}</span>

@@ -236,10 +236,27 @@
     <!-- POLL -->
     {!! Html::script('js/poll.js') !!}
 
+    {!! Html::script('bower/tinymce/tinymce.min.js') !!}
+
     <script type="text/javascript">
         /**
          * Init add images for options
         */
         var jqCreateImageOption = new jqAddImageOption();
+
+        tinymce.init({
+            selector: '#description',
+            menubar: false,
+            forced_root_block : false,
+            force_br_newlines : true,
+            force_p_newlines : false,
+            toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code'
+            ],
+            content_css: '//www.tinymce.com/css/codepen.min.css'
+        });
     </script>
 @endpush
