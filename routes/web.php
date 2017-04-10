@@ -142,6 +142,9 @@ Route::resource('language', 'User\LanguageController', [
     'only' => ['store']
 ]);
 
+Route::post('vote', 'User\VoteController@editVote');
+Route::delete('delete-vote', 'User\VoteController@deleteVote');
+
 Route::get('/redirect/{provider}', 'SocialAuthController@redirectToProvider');
 Route::get('/callback/{provider}', 'SocialAuthController@handleProviderCallback');
 

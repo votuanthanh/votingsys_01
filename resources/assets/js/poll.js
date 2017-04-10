@@ -1007,8 +1007,8 @@ function createFixedTfoot()
     style.bottom = -$('#timeline').scrollTop();
 
     $box.css(style);
-
-    $('.tf-check-option tr td').each(function (index, item) {
+    
+    $('.tf-check-option tr.tr-input td').each(function (index, item) {
         var $chirenBox = $('<div>');
         var $boxTemp = $(item);
 

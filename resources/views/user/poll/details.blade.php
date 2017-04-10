@@ -455,13 +455,13 @@
                                                             <!--Start: Show result -->
                                                             <tr class="fix-td result-poll">
                                                                 @if (!$optionDates['hours'])
-                                                                    <td colspan="2">
+                                                                    <td colspan="3">
                                                                         <strong>
                                                                             {{ $optionDates['participants']->count() . ' ' . trans('polls.participants')}}
                                                                         </strong>
                                                                     </td>
                                                                 @else
-                                                                    <td class="td-not-bg" colspan="2"></td>
+                                                                    <td class="td-not-bg" colspan="3"></td>
                                                                 @endif
                                                                 @foreach ($optionDates['id'] as $counter)
                                                                     <td class="text-center">
@@ -479,13 +479,13 @@
                                                             <!--START: Show month + year of option -->
                                                             <tr class="header date month">
                                                                 @if ($optionDates['notHour'])
-                                                                    <td class="td-empty" colspan="2">
+                                                                    <td class="td-empty" colspan="3">
                                                                         <strong>
                                                                             {{ $optionDates['participants']->count() . ' ' . trans('polls.participants')}}
                                                                         </strong>
                                                                     </td>
                                                                 @else
-                                                                    <td class="td-not-bg" colspan="2"></td>
+                                                                    <td class="td-not-bg" colspan="3"></td>
                                                                 @endif
                                                                 @foreach ($optionDates['months'] as $data)
                                                                     <td class="msep" colspan="{{ $data['count'] }}">
@@ -500,6 +500,9 @@
                                                             <!--START: Show week + day or only of option -->
                                                             <tr class="header date day">
                                                                 @if ($optionDates['notHour'])
+                                                                    <td class="hname action-edit">
+                                                                        {{ trans('label.edit') }}
+                                                                    </td>
                                                                     <td class="hname">
                                                                         {{ trans('polls.name')}}
                                                                     </td>
@@ -507,7 +510,7 @@
                                                                         {{ trans('polls.email')}}
                                                                     </td>
                                                                 @else
-                                                                    <td class="td-empty" colspan="2">
+                                                                    <td class="td-empty" colspan="3">
                                                                         <strong>
                                                                             {{ $optionDates['participants']->count() . ' ' . trans('polls.participants')}}
                                                                         </strong>
@@ -537,6 +540,9 @@
                                                         @if (!$optionDates['notHour'])
                                                             <!--START: Show hour or text of option -->
                                                             <tr class="header date time">
+                                                                <td class="hname action-edit">
+                                                                    {{ trans('label.edit') }}
+                                                                </td>
                                                                 <td class="hname">
                                                                     {{ trans('polls.name')}}
                                                                 </td>
@@ -566,9 +572,31 @@
                                                     @if (!$isHideResult || Gate::allows('administer', $poll))
                                                         <tbody class="result-poll waypoints">
                                                             @foreach ($optionDates['participants'] as $voter)
-                                                                <tr>
-                                                                    <td class="nsep">{{ $voter['name'] }}</td>
-                                                                    <td class="esep">{{ $voter['email'] }}</td>
+                                                                <tr class="js-voter-box">
+                                                                    <td class="nsep">
+                                                                        @if (($voter['voter']['vote_id']
+                                                                                && auth()->check()
+                                                                                && auth()->user()->id == $voter['voter']['id'])
+                                                                            || in_array($voter['voter']['id'], request()->cookie('participant_id') ?: []))
+                                                                            <div class="inline-edit" data-edit-voted="{{ json_encode($voter['voter']) }}">
+                                                                                <a href="javascript:void(0)" class="js-edit-vote">
+                                                                                    <span class="glyphicon glyphicon-pencil text-primary"></span>
+                                                                                </a>
+                                                                                <a href="javascript:void(0)" class="js-delete-vote"
+                                                                                    data-url-delete="{{ action('User\VoteController@deleteVote') }}"
+                                                                                    data-option="{{ $voter['id'] }}"
+                                                                                    data-poll-id="{{ $poll->id }}">
+                                                                                    <span class="glyphicon glyphicon-trash text-danger"></span>
+                                                                                </a>
+                                                                            </div>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="nsep">
+                                                                        <span class="name-voter">{{ $voter['name'] }}</span>
+                                                                    </td>
+                                                                    <td class="esep">
+                                                                        <span class="email-voter">{{ $voter['email'] }}</span>
+                                                                    </td>
                                                                     @if ($optionDates['hours'])
                                                                         @foreach ($optionDates['hours'] as $hour)
                                                                             @if ($voter['id']->contains($hour['id']))
@@ -597,8 +625,20 @@
                                                     @endif
                                                     <tfoot class="tf-check-option">
                                                         @if (!$isLimit && !$poll->isClosed() && !$isTimeOut)
-                                                            <tr>
-                                                                <td colspan="2" class="td-choose-option"></td>
+                                                            <tr class="tr-input">
+                                                                <td class="td-choose-option"></td>
+                                                                <td class="td-choose-option td-name-temp left-align">
+                                                                    {!! Form::text('name', null, [
+                                                                        'class' => 'hide input-name form-control input-sm'
+                                                                    ]) !!}
+                                                                    <span class="hide text-danger js-show-error-name"></span>
+                                                                </td>
+                                                                <td class="text-left td-choose-option td-email-temp left-align">
+                                                                    {!! Form::text('email', null, [
+                                                                        'class' => 'hide input-email form-control input-sm'
+                                                                    ]) !!}
+                                                                    <span class="hide text-danger js-show-error-email"></span>
+                                                                </td>
                                                                 @foreach ($optionDates['id'] as $id => $counter)
                                                                     <td class="opsep p parent-vote td-choose-option" onclick="voted('{{ $id }}', 'timeline')">
                                                                         @if ($poll->multiple == trans('polls.label.multiple_choice'))
@@ -623,9 +663,28 @@
                                                                     </td>
                                                                 @endforeach
                                                             </tr>
+                                                            <tr class="tr-action hide">
+                                                                <td colspan="{{ 3 + count($optionDates['id']) }}">
+                                                                    <div class="text-right" data-poll-id="{{ $poll->id }}">
+                                                                        <span class="hide text-danger">
+                                                                            {{ trans('polls.validation.option.option') }}
+                                                                        </span>
+                                                                        <a href="javascript:void(0)"
+                                                                            class="btn btn-default btn-sm cancel-edit-vote">
+                                                                            Cancel
+                                                                        </a>
+                                                                        <a href="javascript:void(0)"
+                                                                            class="btn btn-primary btn-sm save-edit-vote"
+                                                                            data-url-edit = "{{ action('User\VoteController@editVote') }}">
+                                                                            Save
+                                                                        </a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
                                                         @endif
                                                     </tfoot>
                                                 </table>
+                                                <div id="data-voter"></div>
                                             <!--END: Show option details-->
                                         </div>
                                         <!--END: Show Option With Time line -->
@@ -722,7 +781,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 col-btn-xs-vote">
-                                                <span class="input-group-btn"
+                                                <span class="input-group-btn js-data-validate"
                                                     data-message-email="{{ trans('polls.message_email') }}"
                                                     data-id-poll="{{ $poll->id }}"
                                                     data-url="{{ url('/check-email') }}"

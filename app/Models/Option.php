@@ -81,7 +81,7 @@ class Option extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'votes')->withTimestamps();
+        return $this->belongsToMany(User::class, 'votes')->withPivot('id')->withTimestamps();
     }
 
     public function participants()

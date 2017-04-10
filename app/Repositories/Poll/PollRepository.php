@@ -1478,24 +1478,22 @@ class PollRepository extends BaseRepository implements PollRepositoryInterface
     public function checkIfEmailVoterExist($input)
     {
         $poll = $this->model->find($input['pollId']);
+
         $emailVote = $input['emailVote'];
+
+        $emailIgnore = isset($input['emailIgnore']) ? $input['emailIgnore'] : false;
 
         if ($poll) {
             $poll->load('options.users', 'options.participants');
 
-            foreach ($poll->options as $option) {
-                foreach ($option->users as $user) {
-                    if (isset($user->email) && $user->email == $emailVote) {
-                        return true;
-                    }
-                }
-
-                foreach ($option->participants as $participant) {
-                    if (isset($participant->email) && $participant->email == $emailVote) {
-                        return true;
-                    }
-                }
-            }
+            return $poll->options->map(function ($option) {
+                return $option->users->merge($option->participants);
+            })
+            ->flatten()
+            ->reject(function ($voter) use ($emailIgnore) {
+                return $emailIgnore && $voter->email == $emailIgnore;
+            })
+            ->contains('email', $emailVote);
         }
 
         return false;
@@ -1641,6 +1639,11 @@ class PollRepository extends BaseRepository implements PollRepositoryInterface
                         ? $participant->options->pluck('id')
                         : collect([])->push($option->id),
                     'created_at' => $participant->pivot->created_at,
+                    'voter' => [
+                        'id' => $participant->id,
+                        'vote_id' => $participant->pivot->id,
+                        'user_id' => $class === Participant::class ? $participant->user_id : null,
+                    ],
                 ];
             }));
 
@@ -1713,6 +1716,124 @@ class PollRepository extends BaseRepository implements PollRepositoryInterface
             return $carry;
         });
 
+        //dd($data['participants']->pluck('created_at'));
+
         return $data;
+    }
+
+    public function getSocketOption($poll)
+    {
+        $settingsPoll = $this->getSettingsPoll($poll->id);
+
+        // Show result options
+        $optionDates = $this->showOptionDate($poll);
+
+        $config = config('settings.setting');
+
+        $isLimit = $optionDates['participants']->count() >= (int) $config['set_limit']['value'];
+
+        $listVoter = $poll->options->reduce(function ($lookup, $item) {
+            $lookup[$item->id] = $item->listVoter();
+
+            return $lookup;
+        });
+
+        $isHaveImages = $poll->isImages();
+
+        // layout result option for voted
+        $dataView['html'] = view(
+            'user.poll.vote_details_layouts',
+            compact('optionDates')
+        )->render();
+
+        // layout horizontal options
+        $dataView['horizontalOption'] = view(
+            '.user.poll.option_horizontal',
+            compact('settingsPoll', 'poll', 'isHaveImages', 'isLimit', 'listVoter')
+        )->render();
+
+        // layout vertical options
+        $dataView['verticalOption'] = view(
+            '.user.poll.option_vertical',
+            compact('settingsPoll', 'poll', 'isHaveImages', 'isLimit')
+        )->render();
+
+        // layout timeline options
+        $dataView['timelineOption'] = view(
+            '.user.poll.option_timeline',
+            compact('poll', 'isLimit', 'settingsPoll', 'optionDates')
+        )->render();
+
+        // Count voter that voted all option
+        $dataView['count_participant'] = $optionDates['participants']->count();
+
+        return $dataView;
+    }
+
+    public function getSocketChart($poll)
+    {
+        $isHaveImages = $poll->isImages();
+
+        $options = $poll->options;
+
+        //data for draw chart
+        $totalVote = $options->reduce(function ($carry, $option) {
+            return $carry + $option->countVotes();
+        });
+
+        $optionRateBarChart = $totalVote ? [] : null;
+
+        $optionRateBarChart = $options->filter(function ($option) {
+            return $option->countVotes();
+        })->map(function ($option) use ($isHaveImages) {
+            $countOption = $option->countVotes();
+
+            return $isHaveImages
+                ? ['<img src="' . $option->showImage() . '" class="image-option-poll">'
+                    . '<span class="name-option-poll">' . $option->name . '</span>',$countOption]
+                : ['<p>' . $option->name . '</p>', $countOption];
+        })
+        ->values()
+        ->toJson();
+
+        $optionRatePieChart = json_encode($this->getDataToDrawPieChart($poll, $isHaveImages));
+
+        $chartNameData = json_encode($this->getNameOptionToDrawChart($poll, $isHaveImages));
+
+        $fontSize = $this->getSizeChart($poll)['fontSize'];
+
+        //get data result to sort number of vote
+        $dataTableResult = $this->getDataTableResult($poll);
+
+        //sort option and count vote by number of vote
+        $dataTableResult = array_values(array_reverse(array_sort($dataTableResult, function ($value)
+        {
+            return $value['numberOfVote'];
+        })));
+
+        // html result vote
+        $dataChart['html_result_vote'] = view(
+            'user.poll.result_vote_layouts',
+            compact('dataTableResult', 'isHaveImages')
+        )->render();
+
+        $dataChart['html_pie_bar_manage_chart'] = view('user.poll.pie_bar_manage_chart_layouts')->render();
+
+        // get pointer pie bar chart
+        $dataChart['html_pie_bar_chart'] = view('user.poll.pie_bar_chart_layouts')->render();
+
+        // get layout pie chart
+        $dataChart['htmlPieChart'] = view(
+            'user.poll.piechart_layouts',
+            compact('optionRatePieChart', 'isHaveImages')
+        )->render();
+
+        // get layout bar chart
+        $dataChart['htmlBarChart'] = view(
+            'user.poll.barchart_layouts',
+            compact('optionRateBarChart', 'chartNameData', 'fontSize')
+        )->render();
+
+        return $dataChart;
     }
 }

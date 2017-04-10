@@ -47,7 +47,6 @@ class VoteController extends Controller
 
     public function store(VoteRequest $request)
     {
-        //get MAC address of Client
         $client  = @$_SERVER['HTTP_CLIENT_IP'];
         $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
         $remote  = $_SERVER['REMOTE_ADDR'];
@@ -439,6 +438,14 @@ class VoteController extends Controller
 
         Session::put('isVotedSuccess', true);
 
+        if (isset($participant)) {
+            $cookie = (array) $request->cookie('participant_id');
+
+            array_push($cookie, $participant->id);
+
+            \Cookie::queue('participant_id', $cookie, 60 * 24 * 365);
+        }
+
         return redirect()->to($poll->getUserLink())->with('message', trans('polls.vote_successfully'));
     }
 
@@ -465,7 +472,13 @@ class VoteController extends Controller
     public function ajaxCheckIfExistEmailVote(Request $request)
     {
         if ($request->ajax()) {
-            $status = $this->pollRepository->checkIfEmailVoterExist($request->all());
+            $input = $request->only([
+                'pollId',
+                'emailVote',
+                'emailIgnore',
+            ]);
+
+            $status = $this->pollRepository->checkIfEmailVoterExist($input);
 
             return response()->json(['status' => $status]);
         }
@@ -658,5 +671,92 @@ class VoteController extends Controller
         } catch (Exception $e) {
             throw new Exception(trans('message.find_error'));
         }
+    }
+
+    public function editVote(Request $request)
+    {
+        $input = $request->only([
+            'id',
+            'option',
+            'vote_id',
+            'poll_id',
+            'user_id',
+            'name',
+            'email',
+        ]);
+
+        $status = $this->participantRepository->updateOption($input);
+
+        if ($status) {
+            $redis = LRedis::connection();
+
+            // Get data for socket
+            $poll = $this->pollRepository->find($input['poll_id']);
+
+            $poll->load('options.users', 'options.participants', 'links', 'settings');
+
+            // Get view option
+            $viewOptions = $this->pollRepository->getSocketOption($poll);
+
+            // Get view chart
+            $chart = $this->pollRepository->getSocketChart($poll);
+
+            // Count voter that voted each option
+            $dataSocket['result'] = $poll->countVotesWithOption();
+
+            // poll id
+            $dataSocket['poll_id'] = $poll->id;
+
+            $dataSocket['success'] = true;
+
+            $dataSocket = array_merge($viewOptions, $chart, $dataSocket);
+
+            $redis->publish('votes', json_encode($dataSocket));
+        }
+
+        return json_encode(['status' => $status]);
+    }
+
+    public function deleteVote(Request $request)
+    {
+        $input = $request->only([
+            'id',
+            'option',
+            'vote_id',
+            'poll_id',
+            'name',
+            'email',
+        ]);
+
+        $status = $this->participantRepository->deleteVoter($input);
+
+        if ($status) {
+            $redis = LRedis::connection();
+
+            // Get data for socket
+            $poll = $this->pollRepository->find($input['poll_id']);
+
+            $poll->load('options.users', 'options.participants', 'links', 'settings');
+
+            // Get view option
+            $viewOptions = $this->pollRepository->getSocketOption($poll);
+
+            // Get view chart
+            $chart = $this->pollRepository->getSocketChart($poll);
+
+            // Count voter that voted each option
+            $dataSocket['result'] = $poll->countVotesWithOption();
+
+            // poll id
+            $dataSocket['poll_id'] = $poll->id;
+
+            $dataSocket['success'] = true;
+
+            $dataSocket = array_merge($viewOptions, $chart, $dataSocket);
+
+            $redis->publish('votes', json_encode($dataSocket));
+        }
+
+        return json_encode(['status' => $status]);
     }
 }
