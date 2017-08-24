@@ -10,6 +10,8 @@
 
 {!! Html::script(elixir('js/layout/master.js')) !!}
 
+{!! Html::script(elixir('js/quill.min.js')) !!}
+
 @stack('create-scripts')
 
 @stack('detail-scripts')

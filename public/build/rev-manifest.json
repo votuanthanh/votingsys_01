@@ -1,0 +1,22 @@
+{
+  "css/app.css": "css/app-d41d8cd98f.css",
+  "css/layout/master.css": "css/layout/master-46d67fa6f2.css",
+  "css/user.css": "css/user-db5a85e31c.css",
+  "js/addImageOption.js": "js/addImageOption-5e94ff9b62.js",
+  "js/app.js": "js/app-d190c036aa.js",
+  "js/chart.js": "js/chart-f5d3f4e2c7.js",
+  "js/comment.js": "js/comment-15338292f2.js",
+  "js/common.js": "js/common-4f39aad8e6.js",
+  "js/editLink.js": "js/editLink-9da7fd0878.js",
+  "js/jqAddImageOption.js": "js/jqAddImageOption-2650fd9b2a.js",
+  "js/layout/master.js": "js/layout/master-ca1c19a107.js",
+  "js/listPolls.js": "js/listPolls-0d3a4fed33.js",
+  "js/managePoll.js": "js/managePoll-c684949a44.js",
+  "js/multipleLanguage.js": "js/multipleLanguage-ab1d5ee988.js",
+  "js/poll.js": "js/poll-d50997eeb6.js",
+  "js/quill.min.js": "js/quill-4aa726196b.min.js",
+  "js/requiredPassword.js": "js/requiredPassword-a68193a1e4.js",
+  "js/shareSocial.js": "js/shareSocial-9570108715.js",
+  "js/vote.js": "js/vote-05681e1418.js",
+  "js/voteSocket.js": "js/voteSocket-9c897ddf17.js"
+}

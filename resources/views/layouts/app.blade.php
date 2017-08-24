@@ -23,6 +23,7 @@
 
         <!-- CONTENT -->
         <div class="container-fluid">
+            <div id="test-quill"></div>
             @yield('content')
             <a href="javascript:void(0);" id="scroll">{{ trans('label.top') }}<span></span></a>
         </div>
